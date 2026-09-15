@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Şifre Sıfırlama · Gazz+</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Renkler uygulamanın "Karbon & Ateş" paletiyle birebir aynı
+     (lib/theme/app_theme.dart → GazzPalette.karbonAtes). */
+  :root {
+    --zemin: #1C1C1C;
+    --yuzey: #2A2A28;
+    --yuzey-cukur: #232321;
+    --murekkep: #F2F0EA;
+    --murekkep-soluk: #8A8A85;
+    --vurgu: #C81708;
+    --tehlike: #E5486F;
+    --basari: #3FA96A;
+    --kenar: rgba(242, 240, 234, 0.09);
+    --kenar-belirgin: rgba(242, 240, 234, 0.22);
+    --dolgu-sonuk: rgba(242, 240, 234, 0.05);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background: var(--zemin);
+    color: var(--murekkep);
+    font-family: 'Rajdhani', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    /* Merkeze doğru açılan hafif vurgu parlaması — uygulamadaki kart hissi. */
+    background-image: radial-gradient(
+      ellipse 80% 55% at 50% 0%,
+      rgba(200, 23, 8, 0.13),
+      transparent 70%
+    );
+  }
+
+  .kart {
+    width: 100%;
+    max-width: 420px;
+    background: var(--yuzey);
+    border: 1px solid var(--kenar-belirgin);
+    border-radius: 14px;
+    padding: 28px 24px 24px;
+  }
+
+  .marka {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .marka-im {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--vurgu);
+    flex: none;
+  }
+  .marka-ad {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  .alt-metin {
+    margin: 0 0 22px;
+    font-size: 14.5px;
+    color: var(--murekkep-soluk);
+  }
+
+  label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    color: var(--murekkep-soluk);
+  }
+
+  .alan { margin-bottom: 16px; }
+
+  .sifre-kutu { position: relative; }
+
+  input[type="password"], input[type="text"] {
+    width: 100%;
+    padding: 12px 44px 12px 12px;
+    background: var(--dolgu-sonuk);
+    border: 1px solid var(--kenar);
+    border-radius: 10px;
+    color: var(--murekkep);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--vurgu);
+    box-shadow: 0 0 0 1px var(--vurgu);
+  }
+  input::placeholder { color: var(--murekkep-soluk); opacity: 0.75; }
+
+  .goz {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    color: var(--murekkep-soluk);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+  }
+  .goz:hover { color: var(--murekkep); }
+
+  button.ana {
+    width: 100%;
+    margin-top: 4px;
+    padding: 14px;
+    background: var(--vurgu);
+    border: 0;
+    border-radius: 10px;
+    color: var(--murekkep);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+  button.ana:disabled { opacity: 0.55; cursor: default; }
+
+  .ipucu {
+    margin: 14px 0 0;
+    font-size: 12.5px;
+    color: var(--murekkep-soluk);
+  }
+
+  .uyari {
+    margin-top: 16px;
+    padding: 11px 13px;
+    border-radius: 10px;
+    border: 1px solid var(--kenar);
+    background: var(--dolgu-sonuk);
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+  .uyari.hata { color: var(--tehlike); border-color: rgba(229, 72, 111, 0.4); }
+  .uyari.iyi { color: var(--basari); border-color: rgba(63, 169, 106, 0.4); }
+
+  .durum-im {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--dolgu-sonuk);
+    border: 1px solid var(--kenar);
+    font-size: 22px;
+  }
+
+  [hidden] { display: none !important; }
+
+  .yukleniyor {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--murekkep-soluk);
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+  .donen {
+    width: 17px;
+    height: 17px;
+    flex: none;
+    border: 2px solid var(--kenar-belirgin);
+    border-top-color: var(--vurgu);
+    border-radius: 50%;
+    animation: don 0.7s linear infinite;
+  }
+  @keyframes don { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .donen { animation-duration: 2.4s; }
+  }
+
+  .dip {
+    margin: 22px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--kenar);
+    font-size: 12px;
+    color: var(--murekkep-soluk);
+  }
+  .dip a { color: var(--murekkep-soluk); }
+</style>
+</head>
+<body>
+<main class="kart">
+  <div class="marka">
+    <div class="marka-im" aria-hidden="true"></div>
+    <div class="marka-ad">GAZZ+</div>
+  </div>
+
+  <!-- 1) Bağlantı doğrulanırken -->
+  <section id="asama-dogrulama">
+    <h1>Bağlantı kontrol ediliyor</h1>
+    <p class="alt-metin">Bir saniye…</p>
+    <div class="yukleniyor"><span class="donen"></span><span>Doğrulanıyor</span></div>
+  </section>
+
+  <!-- 2) Yeni şifre formu -->
+  <section id="asama-form" hidden>
+    <h1>Yeni şifre belirle</h1>
+    <p class="alt-metin">Hesabın doğrulandı. Aşağıya yeni şifreni yaz.</p>
+
+    <form id="form" novalidate>
+      <div class="alan">
+        <label for="sifre">YENİ ŞİFRE</label>
+        <div class="sifre-kutu">
+          <input id="sifre" type="password" placeholder="En az 6 karakter"
+                 autocomplete="new-password" minlength="6" required>
+          <button type="button" class="goz" id="goz" aria-label="Şifreyi göster">GÖSTER</button>
+        </div>
+      </div>
+
+      <div class="alan">
+        <label for="sifre-tekrar">YENİ ŞİFRE (TEKRAR)</label>
+        <div class="sifre-kutu">
+          <input id="sifre-tekrar" type="password" placeholder="Şifreyi tekrar gir"
+                 autocomplete="new-password" minlength="6" required>
+        </div>
+      </div>
+
+      <button class="ana" id="gonder" type="submit">ŞİFREYİ GÜNCELLE</button>
+    </form>
+
+    <div id="form-hata" class="uyari hata" hidden></div>
+    <p class="ipucu">Güncelledikten sonra uygulamaya yeni şifrenle giriş yapabilirsin.</p>
+  </section>
+
+  <!-- 3) Başarılı -->
+  <section id="asama-bitti" hidden>
+    <div class="durum-im" aria-hidden="true">✓</div>
+    <h1>Şifren güncellendi</h1>
+    <p class="alt-metin">
+      Artık Gazz+ uygulamasına yeni şifrenle giriş yapabilirsin.
+      Bu sayfayı kapatabilirsin.
+    </p>
+  </section>
+
+  <!-- 4) Bağlantı geçersiz / süresi dolmuş -->
+  <section id="asama-gecersiz" hidden>
+    <div class="durum-im" aria-hidden="true">!</div>
+    <h1>Bağlantı geçerli değil</h1>
+    <p class="alt-metin" id="gecersiz-metin">
+      Bu şifre sıfırlama bağlantısı geçersiz ya da süresi dolmuş olabilir.
+    </p>
+    <p class="ipucu">
+      Uygulamayı aç, giriş ekranında <strong>“Şifremi unuttum”</strong>a dokun ve
+      yeni bir bağlantı iste. Sıfırlama bağlantıları kısa süre geçerlidir ve
+      yalnızca bir kez kullanılabilir.
+    </p>
+  </section>
+
+  <p class="dip">
+    Bu isteği sen yapmadıysan hiçbir şey yapmana gerek yok — şifren değişmez.
+    Sorun yaşarsan: <a href="mailto:gazzplus.destek@gmail.com">gazzplus.destek@gmail.com</a>
+  </p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.48.1/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // Supabase proje bilgileri. anon anahtarı istemci tarafında zaten herkese
+  // açıktır (uygulama ikilisine de gömülü) — asıl koruma RLS ile sunucuda.
+  // Bu iki değer lib/data/supabase/supabase_config.dart ile aynı olmalı.
+  var SUPABASE_URL = 'https://mqvejyfpwsvmvqegqgdv.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xdmVqeWZwd3N2bXZxZWdxZ2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzNzcxMjAsImV4cCI6MjEwMzk1MzEyMH0.JlfcfQVPBFKahmTyU9d296Xmeb4VSz3NYhsZIMjzVio';
+
+  var el = function (id) { return document.getElementById(id); };
+
+  var asamalar = {
+    dogrulama: el('asama-dogrulama'),
+    form: el('asama-form'),
+    bitti: el('asama-bitti'),
+    gecersiz: el('asama-gecersiz')
+  };
+
+  function asamayaGec(ad) {
+    Object.keys(asamalar).forEach(function (k) {
+      asamalar[k].hidden = (k !== ad);
+    });
+  }
+
+  function gecersizGoster(metin) {
+    if (metin) el('gecersiz-metin').textContent = metin;
+    asamayaGec('gecersiz');
+  }
+
+  // persistSession: false → paylaşılan bir bilgisayarda sayfa kapandıktan
+  // sonra localStorage'da oturum kalmaz. detectSessionInUrl: false → token'ı
+  // aşağıda kendimiz okuyoruz, kütüphane URL'e karışmasın.
+  var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  });
+
+  // Supabase hata kodlarını Türkçeye çevirir — uygulamadaki authHataMesaji ile
+  // aynı ton (lib/data/auth/auth_repository.dart).
+  function hataMesaji(hata) {
+    var kod = (hata && hata.code) || '';
+    var mesaj = ((hata && hata.message) || '').toLowerCase();
+
+    if (kod === 'otp_expired' || mesaj.indexOf('expired') !== -1) {
+      return 'Bağlantının süresi dolmuş. Uygulamadan yeni bir sıfırlama bağlantısı iste.';
+    }
+    if (kod === 'weak_password' || mesaj.indexOf('at least 6') !== -1) {
+      return 'Şifre çok zayıf — en az 6 karakter kullan.';
+    }
+    if (kod === 'same_password' || mesaj.indexOf('should be different') !== -1) {
+      return 'Yeni şifren eskisiyle aynı olamaz.';
+    }
+    if (kod === 'over_request_rate_limit' || kod === 'over_email_send_rate_limit') {
+      return 'Çok fazla deneme. Birkaç dakika sonra tekrar dene.';
+    }
+    if (mesaj.indexOf('network') !== -1 || mesaj.indexOf('fetch') !== -1) {
+      return 'Bağlantı kurulamadı — internetini kontrol et.';
+    }
+    return (hata && hata.message) || 'Bir şeyler ters gitti. Tekrar dene.';
+  }
+
+  // ---- 1) Bağlantıdaki jetonu doğrula --------------------------------------
+  //
+  // Beklenen biçim: ?token_hash=...&type=recovery
+  // Bu biçim Supabase e-posta şablonundaki {{ .TokenHash }} ile üretilir ve
+  // PKCE "code verifier"ı gerektirmez — yani kullanıcı maili hangi cihazdan
+  // açarsa açsın çalışır. Ayrıntı: web_site/README.md.
+  function jetonuDogrula() {
+    var q = new URLSearchParams(window.location.search);
+    var tokenHash = q.get('token_hash');
+    var tur = q.get('type') || 'recovery';
+
+    // Supabase bazı durumlarda hatayı doğrudan URL'e koyar.
+    var hataAciklama = q.get('error_description');
+    if (hataAciklama) {
+      gecersizGoster(decodeURIComponent(hataAciklama.replace(/\+/g, ' ')));
+      return;
+    }
+
+    if (tokenHash) {
+      client.auth.verifyOtp({ token_hash: tokenHash, type: tur })
+        .then(function (sonuc) {
+          if (sonuc.error) {
+            gecersizGoster(hataMesaji(sonuc.error));
+          } else {
+            asamayaGec('form');
+            el('sifre').focus();
+          }
+        })
+        .catch(function (e) { gecersizGoster(hataMesaji(e)); });
+      return;
+    }
+
+    // Yedek biçim: implicit akışta token'lar fragment'te gelir.
+    var frag = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    var accessToken = frag.get('access_token');
+    var refreshToken = frag.get('refresh_token');
+    if (accessToken && refreshToken) {
+      client.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
+        .then(function (sonuc) {
+          if (sonuc.error) {
+            gecersizGoster(hataMesaji(sonuc.error));
+          } else {
+            // Token'lar adres çubuğunda/geçmişte kalmasın.
+            history.replaceState(null, '', window.location.pathname);
+            asamayaGec('form');
+            el('sifre').focus();
+          }
+        })
+        .catch(function (e) { gecersizGoster(hataMesaji(e)); });
+      return;
+    }
+
+    // PKCE kodu geldiyse bu sayfa çözemez — "code verifier" yalnızca isteği
+    // başlatan cihazdaki uygulamada durur. Bu, e-posta şablonunun
+    // {{ .TokenHash }} yerine {{ .ConfirmationURL }} kullandığı anlamına gelir.
+    if (q.get('code')) {
+      gecersizGoster(
+        'Bu bağlantı yalnızca isteği başlattığın cihazda açılabilir. ' +
+        'Uygulamadan yeni bir sıfırlama bağlantısı iste.'
+      );
+      return;
+    }
+
+    gecersizGoster('Bu sayfaya şifre sıfırlama e-postandaki bağlantıyla gelmelisin.');
+  }
+
+  // ---- 2) Yeni şifreyi kaydet ----------------------------------------------
+  var form = el('form');
+  var gonder = el('gonder');
+  var formHata = el('form-hata');
+
+  function formHataGoster(metin) {
+    formHata.textContent = metin;
+    formHata.hidden = false;
+  }
+
+  form.addEventListener('submit', function (olay) {
+    olay.preventDefault();
+    formHata.hidden = true;
+
+    var sifre = el('sifre').value;
+    var tekrar = el('sifre-tekrar').value;
+
+    if (sifre.length < 6) {
+      formHataGoster('Şifre en az 6 karakter olmalı.');
+      return;
+    }
+    if (sifre !== tekrar) {
+      formHataGoster('Şifreler birbiriyle uyuşmuyor.');
+      return;
+    }
+
+    gonder.disabled = true;
+    gonder.textContent = 'GÜNCELLENİYOR…';
+
+    client.auth.updateUser({ password: sifre })
+      .then(function (sonuc) {
+        if (sonuc.error) {
+          formHataGoster(hataMesaji(sonuc.error));
+          gonder.disabled = false;
+          gonder.textContent = 'ŞİFREYİ GÜNCELLE';
+          return;
+        }
+        // Oturumu burada bırakma — sayfanın işi bitti.
+        client.auth.signOut().catch(function () {});
+        asamayaGec('bitti');
+      })
+      .catch(function (e) {
+        formHataGoster(hataMesaji(e));
+        gonder.disabled = false;
+        gonder.textContent = 'ŞİFREYİ GÜNCELLE';
+      });
+  });
+
+  // ---- Şifreyi göster/gizle -------------------------------------------------
+  el('goz').addEventListener('click', function () {
+    var alan = el('sifre');
+    var gizli = alan.type === 'password';
+    alan.type = gizli ? 'text' : 'password';
+    this.textContent = gizli ? 'GİZLE' : 'GÖSTER';
+    this.setAttribute('aria-label', gizli ? 'Şifreyi gizle' : 'Şifreyi göster');
+  });
+
+  jetonuDogrula();
+})();
+</script>
+</body>
+</html>
