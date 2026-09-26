@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gazz+ Topluluk Daveti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Renkler d/kart.html ile birebir aynı palet (lib/theme/app_theme.dart
+     → GazzPalette.karbonAtes) — tutarlılık için kopyalanmadı, bilerek aynı
+     dosyada tutulmuyor: bu sayfa ayrı bir depoya (gazz-web) kopyalanıyor,
+     bkz. web_site/README.md. */
+  :root {
+    --zemin: #1C1C1C;
+    --yuzey: #2A2A28;
+    --murekkep: #F2F0EA;
+    --murekkep-soluk: #8A8A85;
+    --vurgu: #C81708;
+    --vurgu-uzeri: #F2F0EA;
+    --kenar: rgba(242, 240, 234, 0.09);
+    --kenar-belirgin: rgba(242, 240, 234, 0.22);
+    --dolgu-sonuk: rgba(242, 240, 234, 0.05);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background: var(--zemin);
+    color: var(--murekkep);
+    font-family: 'Rajdhani', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    background-image: radial-gradient(
+      ellipse 80% 55% at 50% 0%,
+      rgba(200, 23, 8, 0.13),
+      transparent 70%
+    );
+  }
+
+  .kart {
+    width: 100%;
+    max-width: 420px;
+    background: var(--yuzey);
+    border: 1px solid var(--kenar-belirgin);
+    border-radius: 14px;
+    padding: 28px 24px 24px;
+    text-align: center;
+  }
+
+  .marka {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+  .marka-im {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--vurgu);
+    flex: none;
+  }
+  .marka-ad {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  .alt-metin {
+    margin: 0 0 26px;
+    font-size: 14.5px;
+    color: var(--murekkep-soluk);
+  }
+
+  .buton {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+  }
+  .buton.ana {
+    background: var(--vurgu);
+    color: var(--vurgu-uzeri);
+  }
+  .buton.ikincil {
+    background: var(--dolgu-sonuk);
+    color: var(--murekkep);
+    border: 1px solid var(--kenar);
+  }
+
+  [hidden] { display: none !important; }
+
+  .dip {
+    margin: 22px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--kenar);
+    font-size: 12px;
+    color: var(--murekkep-soluk);
+  }
+</style>
+</head>
+<body>
+<main class="kart">
+  <div class="marka">
+    <div class="marka-im" aria-hidden="true"></div>
+    <div class="marka-ad">GAZZ+</div>
+  </div>
+
+  <h1>Bir topluluğa davet edildin</h1>
+  <p class="alt-metin">
+    Uygulamada aç, topluluğu gör ve dilersen katıl.
+  </p>
+
+  <!-- Android: otomatik "uygulamada aç" denemesi arka planda başlar (bkz.
+       aşağıdaki script), bu iki buton her durumda görünür kalır — deneme
+       sessizce başarısız olursa (örn. Instagram/WhatsApp'ın kendi içindeki
+       tarayıcı intent:// bağlantılarını engelliyor) kullanıcının elle
+       devam edebileceği tek yol bu. -->
+  <a id="uygulamada-ac" class="buton ana" hidden href="#">UYGULAMADA AÇ</a>
+  <a id="play-store" class="buton ikincil" hidden
+     href="https://play.google.com/store/apps/details?id=com.gazz.gazz">
+    PLAY STORE'DAN İNDİR
+  </a>
+
+  <!-- Android dışı (iOS/masaüstü) ziyaretçi. iOS henüz App Store'da
+       yayınlanmadığı için (bkz. proje notları — TestFlight aşamasında)
+       şimdilik "yakında" mesajı; App Store'a çıkınca burası da kart.html'deki
+       gibi gerçek bir App Store linkine çevrilmeli. -->
+  <p id="desteklenmiyor" class="alt-metin" hidden>
+    Gazz+ App Store'da yakında.
+  </p>
+
+  <!-- Uygulama kurulu değilse (Play Store'a düşülürse) davet token'ı burada
+       kaybolur — kurulum sonrası bu linki tekrar açmak gerekir. d/kart.html
+       ile aynı bilinçli kısıtlama (bkz. web_site/README.md); install
+       referrer ile bağlamı taşımak bu ekibin kapsamı dışında bırakıldı. -->
+  <p class="dip">gazzplus.com</p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // Bilerek User-Agent sniffing — d/kart.html'deki aynı gerekçe: App Links
+  // zaten kurulu+doğrulanmış bir Android cihazda gerçek bir tarayıcıdan
+  // tıklanan bağlantıyı bu sayfaya hiç düşürmez. Buraya düşülmesi şu üç
+  // durumdan biri demektir: uygulama kurulu değil, App Links doğrulaması
+  // henüz yayılmamış, ya da bağlantı bir in-app tarayıcıdan açıldı.
+  var android = /Android/i.test(navigator.userAgent);
+
+  var PACKAGE = 'com.gazz.gazz';
+  var PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=' + PACKAGE;
+  // Token'ı taşımak için query string korunuyor — host+path+query orijinal
+  // https bağlantıyla aynı olmalı (bkz. Android'in "Improving App Links"
+  // dokümanı ve d/kart.html'deki aynı INTENT_URL deseni).
+  var INTENT_URL =
+    'intent://gazzplus.com/d/davet.html' + window.location.search +
+    '#Intent;scheme=https;package=' + PACKAGE +
+    ';S.browser_fallback_url=' + encodeURIComponent(PLAY_STORE_URL) + ';end';
+
+  if (android) {
+    var uygulamadaAc = document.getElementById('uygulamada-ac');
+    var playStore = document.getElementById('play-store');
+    uygulamadaAc.href = INTENT_URL;
+    playStore.href = PLAY_STORE_URL;
+    uygulamadaAc.hidden = false;
+    playStore.hidden = false;
+
+    try { window.location.href = INTENT_URL; } catch (e) {}
+  } else {
+    document.getElementById('desteklenmiyor').hidden = false;
+  }
+})();
+</script>
+</body>
+</html>
