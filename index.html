@@ -12,88 +12,117 @@
     background: #0B0B0D;
     color: #F2F2F0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    text-align: center;
-    background-image:
-      radial-gradient(circle at 50% 0%, rgba(200, 23, 8, 0.12), transparent 60%);
+    line-height: 1.55;
+    background-image: radial-gradient(circle at 50% 0%, rgba(200, 23, 8, 0.12), transparent 60%);
+    background-repeat: no-repeat;
   }
 
-  .logo {
-    font-size: 56px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
-  .logo .ga { color: #C81708; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 72px 20px 48px; text-align: center; }
+
+  .logo { font-size: 56px; font-weight: 900; letter-spacing: 1px; margin-bottom: 8px; }
+  .logo .ga, .logo .plus { color: #C81708; }
   .logo .zz { color: #F2F2F0; }
-  .logo .plus { color: #C81708; }
 
-  .slogan {
-    font-size: 17px;
-    color: #A8A8A5;
-    margin-bottom: 4px;
-  }
-  .slogan-sub {
-    font-size: 13px;
-    color: #6E6E6B;
-    margin-bottom: 40px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
+  .slogan { font-size: 17px; color: #A8A8A5; margin-bottom: 4px; }
+  .slogan-sub { font-size: 13px; color: #6E6E6B; margin-bottom: 36px; letter-spacing: 0.5px; text-transform: uppercase; }
 
-  .cta {
-    display: inline-block;
-    background: #C81708;
-    color: #FFFFFF;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 15px;
-    padding: 14px 32px;
-    border-radius: 10px;
-    letter-spacing: 0.3px;
-    transition: opacity 0.2s ease;
-  }
-  .cta:hover { opacity: 0.88; }
+  .intro { font-size: 16px; color: #B8B6B0; max-width: 520px; margin: 0 auto 32px; }
 
-  .stripe {
-    width: 64px;
-    height: 3px;
-    background: #C81708;
-    margin: 32px 0;
-    border-radius: 2px;
+  .stores { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .store {
+    display: inline-flex; flex-direction: column; align-items: center;
+    background: #1A1A1D; border: 1px solid #2A2A2D; border-radius: 12px;
+    padding: 12px 28px; min-width: 170px; color: #F2F2F0; text-decoration: none;
   }
+  .store small { font-size: 11px; color: #6E6E6B; letter-spacing: 0.5px; text-transform: uppercase; }
+  .store strong { font-size: 16px; }
+  .store .soon { font-size: 12px; color: #C81708; margin-top: 2px; font-weight: 600; }
 
-  footer {
-    margin-top: 48px;
-    font-size: 12px;
-    color: #4A4A48;
+  .stripe { width: 64px; height: 3px; background: #C81708; margin: 48px auto; border-radius: 2px; }
+
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; text-align: left; }
+  .feature { background: #141416; border: 1px solid #222225; border-radius: 12px; padding: 18px; }
+  .feature h3 { font-size: 15px; margin-bottom: 6px; color: #F2F2F0; }
+  .feature p { font-size: 14px; color: #A8A8A5; }
+
+  h2 { font-size: 22px; margin-bottom: 8px; }
+  .section-lead { font-size: 15px; color: #A8A8A5; margin-bottom: 20px; }
+
+  .contact {
+    display: inline-block; background: #C81708; color: #FFFFFF; text-decoration: none;
+    font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 10px;
   }
-  footer a {
-    color: #6E6E6B;
-    text-decoration: none;
-  }
+  .contact:hover { opacity: 0.88; }
+
+  .faq { text-align: left; margin-top: 28px; }
+  .faq details { background: #141416; border: 1px solid #222225; border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; }
+  .faq summary { cursor: pointer; font-weight: 600; font-size: 15px; color: #F2F2F0; }
+  .faq p { font-size: 14px; color: #A8A8A5; margin-top: 10px; }
+
+  footer { margin-top: 56px; font-size: 12px; color: #4A4A48; }
+  footer a { color: #6E6E6B; text-decoration: none; }
   footer a:hover { color: #A8A8A5; }
 </style>
 </head>
 <body>
+<div class="wrap">
 
   <div class="logo"><span class="ga">GA</span><span class="zz">ZZ</span><span class="plus">+</span></div>
   <div class="slogan">Direksiyonda yazılan hikayeler...</div>
   <div class="slogan-sub">Her km yeni bir sayfa.</div>
 
-  <a class="cta" href="#">Uygulamayı İndir</a>
+  <p class="intro">Aracının bakım, modifiye ve yakıt geçmişini tek yerde tut, emeğini sergile, aynı modele sahip tutkunlarla buluş.</p>
+
+  <div class="stores">
+    <div class="store"><small>iPhone için</small><strong>App Store</strong><span class="soon">Yakında</span></div>
+    <div class="store"><small>Android için</small><strong>Google Play</strong><span class="soon">Yakında</span></div>
+  </div>
 
   <div class="stripe"></div>
 
+  <div class="features">
+    <div class="feature"><h3>Garajın</h3><p>Araçlarını, motor ve gövde bilgilerini, üzerindeki modifiyeleri kaydet.</p></div>
+    <div class="feature"><h3>Araç Günlüğü</h3><p>Bakım, yakıt, gider ve arıza kayıtların; yakıt verimliliğin otomatik hesaplanır.</p></div>
+    <div class="feature"><h3>Topluluk</h3><p>Aracının modeline özel toplulukta paylaş, soru sor, gaz ver.</p></div>
+    <div class="feature"><h3>Verin senin</h3><p>Garaj verilerin cihazında kalır, hesap açmadan kullanabilirsin.</p></div>
+  </div>
+
+  <div class="stripe"></div>
+
+  <h2 id="destek">Destek</h2>
+  <p class="section-lead">Soru, öneri, hata bildirimi veya şikayetleriniz için bize yazın. En kısa sürede dönüş yapıyoruz.</p>
+  <a class="contact" href="mailto:gazzplus.destek@gmail.com">gazzplus.destek@gmail.com</a>
+
+  <div class="faq">
+    <details>
+      <summary>Hesabımı ve verilerimi nasıl silerim?</summary>
+      <p>Uygulamada Profil → Gizlilik &amp; Veri Silme adımından hesabını ve topluluktaki tüm verilerini kalıcı olarak silebilirsin. Cihazındaki garaj verileri uygulamayı kaldırdığında silinir.</p>
+    </details>
+    <details>
+      <summary>Uygunsuz bir içerik veya kullanıcıyı nasıl bildiririm?</summary>
+      <p>Gönderi ve yorumların yanındaki menüden içeriği şikayet edebilir veya kullanıcıyı engelleyebilirsin. Şikayetler 24 saat içinde incelenir.</p>
+    </details>
+    <details>
+      <summary>Satın aldığım bir hak hesabıma tanımlanmadı, ne yapmalıyım?</summary>
+      <p>Uygulamayı kapatıp yeniden aç; yarım kalan satın almalar açılışta otomatik tamamlanır. Sorun devam ederse satın alma tarihini ve hesap e-postanı belirterek bize yaz.</p>
+    </details>
+    <details>
+      <summary>Satın alma iadesi nasıl yapılır?</summary>
+      <p>İadeler, satın almanın yapıldığı mağazanın (App Store veya Google Play) iade süreçleri üzerinden değerlendirilir.</p>
+    </details>
+    <details>
+      <summary>Verilerimi yedekleyebilir miyim?</summary>
+      <p>Evet. Uygulama içindeki yedekleme özelliğiyle garaj verilerini dışa aktarıp daha sonra geri yükleyebilirsin.</p>
+    </details>
+  </div>
+
   <footer>
     &copy; 2026 Gazz+ &nbsp;·&nbsp;
-    <a href="/gizlilik-politikasi.html">Gizlilik Politikası</a>
+    <a href="/gizlilik-politikasi.html">Gizlilik Politikası</a> &nbsp;·&nbsp;
+    <a href="/kullanim-sartlari.html">Kullanım Şartları</a> &nbsp;·&nbsp;
+    <a href="#destek">Destek</a>
   </footer>
 
+</div>
 </body>
 </html>
